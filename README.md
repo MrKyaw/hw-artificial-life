@@ -1,133 +1,192 @@
-# Evolving Robots for Challenging Environments: Morphology Optimization for Versatile Locomotion.
+# Artificial Life — Evolving Robots, Morphologies & Brains
 
-  Qinjie Lin, 
-  Northwestern University CS396 - Artificial Life, 
-  Final Project, 
+**Northwestern University · CS396 Artificial Life · Coursework + Final Project**
 
-  [video](https://youtu.be/u-VeZRu_HCs)
+[![Course](https://img.shields.io/badge/course-CS396%20Artificial%20Life-6A5ACD)](#)
+[![Simulation](https://img.shields.io/badge/simulation-PyBullet-0E7C7B)](#)
+[![Method](https://img.shields.io/badge/method-evolutionary%20algorithms-1F6FEB)](#)
+[![Python](https://img.shields.io/badge/python-3.x-3776AB)](#)
 
-# I Abstract (Hypothesis ans Inspiration)
+> Can a robot evolve a body and a brain that work together? These experiments answer with a two-level evolutionary algorithm — morphology on the outside, control on the inside — and a menagerie of creatures that learn to hop, climb, crawl, and snake across challenging terrain.
 
-  Robots designed for specific tasks often struggle to adapt to new environments efficiently. In contrast, animals exhibit remarkable versatility in locomotion due to their diverse morphology. 
-  Inspired by nature, we present a novel approach to optimize robot morphology for versatile locomotion in challenging environments using evolutionary algorithms. 
-  The approach uses a two-level evolutionary optimization for desgin robots that are optimized for specific tasks. 
-  Specifically, the first level is focused on evolving the robot's morphology using an evolutionary algorithm (EA), while the second level uses another EA to optimize the robot's control policy for the given morphology. The selection of the optimal morphology is based on the evaluation of the control EA, which provides a fitness measure for each morphology. 
-  We demonstrate the effectiveness of our approach on a set of challenging tasks, including rough terrain traversal, obstacle avoidance bumper jumping, and step climbing. 
-  Our optimized morphologies show remarkable versatility in these tasks, outperforming task-specific designs and demonstrating the potential of adaptable robots for real-world applications.
+---
 
-  ![](./final/data/abstract.png)
+## Overview
 
+This repository collects the assignments and final project for **CS396 Artificial Life** at **Northwestern University**, authored by **Qinjie Lin**. Every experiment uses physics simulation (PyBullet / Pyrosim) and evolutionary computation to explore the boundary between morphology and behaviour.
 
-# II Teaser Gif and simulation run
+The work spans three threads:
 
-  Our total simulations run is `200K`, calculated by4(envs) x 5(seeds) x 10(population_morphology) x 20(generation_morphology) x 10(population_brain) x 5(generation_brain).
+1. **Course assignments (5–8)** — progressively richer creature generators, from hand-designed virus-shaped robots and 1D snakes to branching 3D bodies with evolved controllers.
+2. **Final project** — *Evolving Robots for Challenging Environments: Morphology Optimization for Versatile Locomotion*, a two-level EA that co-optimizes body and brain across four environments.
+3. **GPT-2 project** — a compact language-model fine-tuning pipeline (data download → preprocessing → tokenizer → training → evaluation) built alongside the course.
 
-  ![](./final/data/teaser_1.gif) | ![](./final/data/teaser_2.gif)
-  :-------------------------:|:-------------------------:
+The original, full final-project write-up — with method figures, teaser GIFs, and experiment discussion — is preserved in **[FINAL_PROJECT.md](FINAL_PROJECT.md)**.
 
-  Teaser: This teaser answer one question: Can robots evolve to conquer challenging terrains? Yes. They can. Specifically, the top row shows robots with random design and brain, struggling to move on four challenging environment. After evolution, the robot's morphology begins to change, and different variations of the robot with various shapes and sizes appear in succession. The bottown rows shows best robot design and brain during the evolution, that appears to be moving with faster speed. We observe that the evolvoed robots is similar to real-world animals. - the jumper robot look likes Kangaroos, the climbing robots looks like mountain goat, the maze robot looks like insect crawling flexibiliy, the crawl robots looks like snakeing moving in rough teraains. These observation mighe seem unobvious, but we can still imagine it. :)
+---
 
+## Repository Map
 
-# III Experiment Design
+| Path | What it contains |
+|---|---|
+| `Assignment5/` | **Design your own creatures** — virus-shaped robot evolved to climb steps |
+| `Assignment6/` | **Random 1D morphologies** — jointed, motorized, sensorized snakes |
+| `Assignment7/` | **3D morphospace** — branching lizards and horses, not just snakes |
+| `Assignment8/` | **Morphology + behaviour** — parallel hill climber for locomotion |
+| `final/` | **Final project** — two-level EA over four challenging environments |
+| `gpt/` | **GPT-2 fine-tuning project** — preprocessing, training, inference |
+| `FINAL_PROJECT.md` | Full original write-up with figures, results, and notes |
 
-  Method Overview: The implementation of our method is refered to parallelHillClimber section in Ludobots. We use the two-level EA (evolutionary algorithm) to enable the evolution of robots, consisting of both morphology and control. The first-level EA evolves the morphology of the robot, i.e., the body links and joints info, while the second-level EA evolves the control, i.e., the brain or a fully-connected linear layer of the robot. The fitness of  children in the first level is the best children's fitness in the second level. The fitness of brain optimization is evaluated based on the final `X position` of the body. 
-  
-  <p align="center">
-  <img src="./final/data/ea_simulation_3.png" alt="alt text" width="" height="">
-  </p>
+---
 
-  Control Experiment: To prove that, robot morphology evolves differently in different chanllenging environment, we define four chanllenging environment in the Pybullet simulation (Obstacle, Step, Terrain, Bumper). Then, we initialize the two-level EA with the same seed to evolves the morphology and brain of the robots. Specifically, the first genenrations of the algorithm are with the same morphology and brain. After evolution, we can see that the robots alwasys evolve differently in different challenging environment. This implies that robot can evolve their morphology to better adapt to the environment.   
+## Final Project — Evolving Robots for Challenging Environments
 
-  <p align="center">
-  <img src="./final/data/ea_generations_2.png" alt="alt text" width="" height="">
-  </p>
+**Thesis.** Animals are versatile because their bodies and controllers co-evolved. Task-specific robots are not. This project asks whether a **two-level evolutionary algorithm** can discover morphologies that generalize across rough terrain, obstacles, steps, and bumper jumps.
 
-# III Method Details
+### Method
 
-  As shown in the following fugure, our method aims to optimize the morphology of a rigid-body robot for a specific task, such as locomotion in challenging terrain. We propose a two-level, or bi-level, evolutionary algorithm approach. At the first level, we use an evolutionary algorithm to optimize the robot's morphology, or its physical structure, to improve its performance on the task. At the second level, we use another evolutionary algorithm to optimize the robot's control policy, or the way it moves its body, based on the morphology selected from the first level.
-    
-  <!-- ![](./data/method-0.png) -->
-  <p align="center">
-  <img src="./final/data/method-0.png" alt="alt text" width="" height="">
-  </p>
+```text
+Level 1 — Morphology EA
+  population of bodies (tree-structured links, joints, sensors)
+        │  each body is scored by…
+        ▼
+Level 2 — Brain EA
+  evolve a controller for that body; fitness = final X position
+        │
+        ▼
+  best brain fitness becomes the body's fitness → next morphology generation
+```
 
-  ## III.I Morphology evolution
+- **Body representation:** a tree of links (sphere / box), joints (revolute / fixed / spherical), sizes, and sensor placement.
+- **Brain:** a fully connected linear controller evolved by parallel hill climbing.
+- **Fitness:** distance travelled along **X** in the physics simulation.
+- **Environments:** `obstacle`, `step`, `terrain`, `bumper`.
+- **Scale:** **200,000 simulations** = 4 environments × 5 seeds × 10 morphology population × 20 morphology generations × 10 brain population × 5 brain generations.
 
-  Population: In this project, the Evolutionary Algorithm (EA) is used to optimize both the morphology and behavior of a robot for locomotion. The EA works by creating a population of candidate solutions (i.e. robots) and iteratively improving them through selection, reproduction, and mutation. We illustrate the population in the following figure.
+### What emerged
 
-  ![](./final/data/mor-population.png)
-  
-  Mutation: Each candidate solution (robot) is evaluated using a fitness function that quantifies its performance in terms of locomotion. The fitness function takes into account the x position of the candidate body. After evaluating the fitness of each candidate solution, the EA selects the most fit solutions and uses them to create the next generation of robots through reproduction and mutation. The process continues until a satisfactory solution (i.e. robot) is found, or a certain stopping criterion (e.g. maximum number of generations) is met. We illustrate the mutation in the following figure.
+| Environment | Evolved behaviour | Animal analogue |
+|---|---|---|
+| Bumper | Jumping over obstacles | Kangaroo |
+| Step | Climbing ledges | Mountain goat |
+| Terrain | Low, flexible crawling | Insect / snake |
+| Obstacle | Agile navigation | Crawling insect |
 
-  ![](./final/data/mor-mutation.png)
+Because every environment starts from the **same seed and the same first generation**, the divergence in final morphologies is evidence that **the environment shapes the body**.
 
-  Selection: The selection step of the morphology evolution involves evaluating the fitness of the population of morphologies based on their performance in a given task. In our approach, the fitness evaluation is performed in a physics simulation environment using PyBullet. The simulation environment is designed to mimic real-world environments that the robots are expected to face. The fitness function is designed to capture walking distance along x axis in the simulation.
+### Run and replay
 
-  ![](./final/data/mor-selection.png)
+```bash
+cd final
 
+# Run the two-level EA (opens many parallel simulations)
+python search_morphology.py --seed 1234 --env terrain
 
-  ## III.II Brain evolution
+# Replay the best evolved body + brain
+python replay_brain.py --brain best --urdf best --seed 1234 --env terrain
 
-  Populations, mutation and selection: Since we have describe the brain evolutaion in the partII, we refer the details of the mutation, selection, and population to the ParallelHillClimber section in Ludobots.
+# Compare against a random body + random brain
+python replay_brain.py --brain random --urdf random --seed 1234 --env terrain
+```
 
-## IV Run and Replay Result
+> The search launches a large number of parallel simulations. Reduce `population_size` in `final/ea_brain/constants.py` and `final/ea_morphology/constants.py` on smaller machines.
 
-  To replay the result in the teaser gif:
+---
 
-  ```
-  cd final
-  python replay_brain.py --brain best  --urdf best --env bumper --seed 4444
-  python replay_brain.py --brain best  --urdf best --env step --seed 3333
-  python replay_brain.py --brain best  --urdf best --env obstacle --seed 2222
-  python replay_brain.py --brain best  --urdf best --env terrain --seed 3333
-  ```
+## Course Assignments
 
-  To run two-level EA, use following command, (This will open 200 parallel simulation run. To decrease the parallel number, try to decrease the population_size in `final/ea_brain/constraints.py` and   `final/ea_morphology/constraints.py`): 
-  
-  ```
-  cd final
-  python search_morphology.py --seed 1234 --env terrain
-  ```
+| Assignment | Goal | Fitness | Entry point |
+|---|---|---|---|
+| **5** | Design a virus-shaped creature that climbs steps | `Z + X` position | `Assignment5/search.py` |
+| **6** | Generate random 1D snake morphologies with sensors | `-X` position (crawl) | `Assignment6/search.py` |
+| **7** | Expand the morphospace to 3D branching bodies | `X` position | `Assignment7/search.py` |
+| **8** | Co-design morphology and behaviour for locomotion | `X` position | `Assignment8/search_morphology.py` |
 
-  To replay the best result of searching, use following command: 
-  
-  ```
-  cd final
-  python replay_brain.py --brain best --urdf best --seed 1234 --env terrain
-  python replay_brain.py --brain random --urdf random --seed 1234 --env terrain
-  ```
+Each assignment ships a `replay.py` (or `replay_brain.py`) for watching the best and random creatures side by side.
 
-## VI Experiment Result
+> Assignments 5 and 6 were written for **~60 CPUs** (`numberOfGenerations` × `populationSize`). Lower those constants if you are running locally.
 
-  Here is a plot containing four subfigures. Each subfigure describes fitness curves of five different random seed, showing the fitness of the best creature in the population at each generation.In our experiment, our total simulations run is `200K`, calculated by`4(envs) x 5(seeds) x 10(population_morphology) x 20(generation_morphology) x 10(population_brain) x 5(generation_brain)`
-  
-  ![](./final/data/fitness_curve.png)
+---
 
+## GPT-2 Fine-Tuning Project
 
-## Discussion and Notes:
+The `gpt/` folder is a self-contained language-model pipeline:
 
-  Limitation1: Mutation of morphology sometimes does not happen, see `generate_morphology.py`.
-  
-  Limitation2: Morphology generation sometimes causes seperation. 
+```text
+gpt/
+├── main.py                     # training entry point
+├── preprocess.py               # dataset construction
+├── train.ipynb / evaluate.ipynb
+└── src/
+    ├── data_preprocessing/     # downloader, transformer, tokenizer
+    ├── model/                  # GPT-2 model, trainer, inference
+    └── utils/                  # data + seed helpers
+```
 
-  Future work: Debugging the morphology encoding, adding more challenging environment, try reinforcement learning. 
+- **Model:** `gpt2` via Hugging Face `transformers`
+- **Training:** `Trainer` + `TrainingArguments`, 3 epochs, batch size 4, `max_length=512`
+- **Artifacts:** checkpoint and fine-tuned model written under `gpt/data/`
 
-  `ea_morphology/solutuion.py`:This code defines a Node class to represent a node in a tree structure, where each node has a size attribute and a list of children nodes. The Random_Node function creates a random node with a size attribute within a given range. The Expand_Node function takes a root_node and recursively expands it into a tree with a maximum depth of maximum_depth, randomly deciding whether to expand each child node or not. The Mutate function performs a mutation operation on a given tree. It first creates a deep copy of the input tree_root to avoid modifying the original tree. Then, it uses the traverse_node function to obtain a list of all the nodes in the tree along with their depths. Next, it selects a random node n from the list of nodes and the depth d of that node. The Expand_Node function is then called on this node n to create a modified version of the tree with a new subtree appended to n at depth d+1. Finally, the mutated tree is returned.
+```bash
+cd gpt
+python main.py
+```
 
-  `others`:
-  representation: tree, tranverse,
-  optimization: cutting branch when advance confict detection happens
-  mutation: pick a node, expand 
-  sensor num need to grater than 0
+---
 
-## citations
+## Quickstart
 
-  ```
-  Evolving 3D Morphology and Behavior by Competition
-  Evolving Virtual Creatures
-  ludobots: https://www.reddit.com/r/ludobots/
-  pics: https://slate.com/technology/2022/12/octopus-californicus-rescue-babies-eggs-raised.html
-  pyrosim: https://github.com/ccappelle/pyrosim
-  pybullet: https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA/edit 
-  ```
+### Prerequisites
 
+- Python 3.8+
+- PyBullet (install with `pip install pybullet`)
+- Pyrosim (bundled under `final/pyrosim/`)
+- For the GPT project: `torch`, `transformers`, `numpy`
+
+### Replay a final-project result
+
+```bash
+cd final
+
+python replay_brain.py --brain best   --urdf best   --env bumper  --seed 4444
+python replay_brain.py --brain best   --urdf best   --env step    --seed 3333
+python replay_brain.py --brain best   --urdf best   --env obstacle --seed 2222
+python replay_brain.py --brain best   --urdf best   --env terrain  --seed 3333
+```
+
+### Experimental batch runs
+
+`final/run.sh` contains the seed × environment sweep used for the reported experiments. It is a template — edit the seed and environment lists before running.
+
+---
+
+## Tech Stack
+
+**Simulation** · PyBullet · Pyrosim · URDF · SDF
+**Evolution** · parallel hill climbing · tree-structured morphology encoding · mutation / selection
+**Learning** · fully connected linear controllers · PyTorch · Hugging Face Transformers · GPT-2
+**Tooling** · Python · NumPy · Matplotlib · Jupyter
+
+**Tags:** `artificial-life` · `evolutionary-algorithms` · `neuroevolution` · `robotics` · `morphology-optimization` · `pybullet` · `parallel-hill-climbing` · `gpt2` · `northwestern-university`
+
+---
+
+## Notes and Limitations
+
+- Morphology mutation occasionally fails to produce structural change; the encoding is the main debugging frontier.
+- Some generated morphologies separate at joints during simulation.
+- Assignment runtime assumes a large CPU pool; the constants are deliberately easy to scale down.
+- This repository is a **fork** of [QinjieLin-NU/hw-artificial-life](https://github.com/QinjieLin-NU/hw-artificial-life). The original coursework, write-up, and results are the upstream author's work.
+
+## Attribution
+
+Original author: **Qinjie Lin**, Northwestern University CS396 — Artificial Life.
+Upstream repository: <https://github.com/QinjieLin-NU/hw-artificial-life>
+
+References cited by the project include *Evolving 3D Morphology and Behavior by Competition*, *Evolving Virtual Creatures*, and the [Ludobots](https://www.reddit.com/r/ludobots/) course.
+
+---
+
+## ⭐ Star this repo if you find it useful! ⭐
+
+Report Bug · Request Feature · Ask Question
